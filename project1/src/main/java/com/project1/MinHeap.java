@@ -14,7 +14,15 @@ public class MinHeap {
      * @param value the int to be inserted
      */
     public void insert(int value) {
-        // TODO
+        heap.add(value);
+        int index = heap.size() - 1;
+        while (index >= 0) {
+            int parent = Math.floorDiv((index - 1), 2);
+            if (heap.get(parent) > heap.get(index)) {
+                swap(index, parent);
+                index = parent;
+            }
+        }
         return;
     }
 
@@ -23,8 +31,15 @@ public class MinHeap {
      * @return the minimum integer in the ArrayList
      */
     public Integer extractMin() {
-        // TODO
-        return 0;
+        if (heap.isEmpty()) {
+            return null;
+        }
+        // before or after removal?
+        int min = heap.get(0);
+        swap(0, heap.size() - 1);
+        heap.remove(heap.size() - 1);
+        siftDown(0);
+        return min;
     }
 
     /**
@@ -33,7 +48,20 @@ public class MinHeap {
      * @param index
      */
     private void siftUp(int index) {
-        // TODO
+        if (index <= 0 || index >= heap.size()) {
+            return;
+        }
+        if (heap.get(index) == null) {
+            return;
+        }
+        int parent = Math.floorDiv((index - 1), 2);
+        if (heap.get(parent) == null) {
+            return;
+        }
+        if (heap.get(parent) > heap.get(index)) {
+            swap(parent, index);
+            siftUp(parent);
+        }
         return;
     }
 
@@ -43,7 +71,27 @@ public class MinHeap {
      * @param index
      */
     private void siftDown(int index) {
-        // TODO
+        if (index < 0 || index >= heap.size()) {
+            return;
+        }
+        if (heap.get(index) == null) {
+            return;
+        }
+        int minElem = index;
+        if (heap.size() > 2 * index && heap.get(2 * index) != null) {
+            if (heap.get(minElem) > heap.get(2 * index)) {
+                minElem = 2 * index;
+            }
+        }
+        if (heap.size() > 2 * index + 1 && heap.get(2 * index + 1) != null) {
+             if (heap.get(minElem) > heap.get(2 * index + 1)) {
+                 minElem = 2 * index + 1;
+            }
+        }
+        if (minElem != index) {
+            swap(index, minElem);
+            siftDown(minElem);
+        }
         return;
     }
 
