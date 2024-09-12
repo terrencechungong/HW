@@ -47,7 +47,15 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
     * @return true if the key is inserted successfully.
     */
     public boolean insert(E key){
-		//TODO
+		Node current = first;
+        while(current != null){
+            if(current.key.compareTo(key) == 0){
+                current.count += 1;
+                return true;
+            }
+            current = current.next;
+        }
+        insert(new Node(key));
     	return true;
 	}
     
@@ -57,7 +65,20 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
     * @return the deleted node
     */
     private Node remove(E key){
-		//TODO
+		Node current = first;
+        Node prev = null;
+        while(current != null){
+            if (key.compareTo(current.key) == 0){
+                if(prev == null) {
+                    first = current.next;
+                    return current;
+                }
+                prev.next = current.next;
+                return current;
+            }
+            prev = current;
+            current = current.next;
+        }
     	return null;
 	}
 
@@ -67,9 +88,32 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
      * @return true if successful
      */
     private boolean insert(Node r){
-		//TODO
-    	return true;
+        Node current = first;
+        Node prev = null;
+        while(current != null) {
+            if (current.count < r.count) {
+                return execInsert(prev, current, r);
+            } else if (current.count == r.count) {
+                if (r.key.compareTo(current.key) <= 0) {
+                    return execInsert(prev, current, r);
+                }
+            }
+            prev = current;
+            current = current.next;
+        }
+    	return execInsert(prev, current, r);
 	}
+
+    private boolean execInsert(Node prev, Node current, Node r){
+        if (prev == null){
+            first = r;
+            r.next = current;
+            return true;
+        }
+        prev.next = r;
+        r.next = current;
+        return true;
+    }
     
     
     /**
@@ -77,7 +121,13 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
      * @return the node that has the word as its key
      */
     private Node find(E k){
-		//TODO
+        Node current = first;
+        while(current != null){
+            if(current.key.equals(k)){
+                return current;
+            }
+            current = current.next;
+        }
     	return null;
 	}
     
@@ -86,7 +136,20 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
      * 
      */
     public boolean isValid() {
-        //TODO
+        Node current = first;
+        int lastInt = Integer.MAX_VALUE;
+        E lastKey = null;
+        while(current != null){
+            if (current.count > lastInt){
+                return false;
+            }
+            if (lastKey != null && lastInt == current.count && lastKey.compareTo(current.key) > 0){
+                return false;
+            }
+            lastInt = current.count;
+            lastKey = current.key;
+            current = current.next;
+        }
     	return true;
     }
     
@@ -97,8 +160,14 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
      * 
      */
     public int getCount(E key){
-		//TODO
-    	return 0;
+        Node current = first;
+        while(current != null){
+            if (current.key.compareTo(key) == 0){
+                return current.count;
+            }
+            current = current.next;
+        }
+        return -1;
 	}
     /**
      * Returns the first n words and count
@@ -107,8 +176,13 @@ public class Frequency<E extends Comparable> implements Iterable<E>{
      * in the same order as the linked list
      */
     public String getWords(int n){
-		//TODO
-    	return null;
+		Node current = first;
+        StringBuilder sb = new StringBuilder();
+        while(current != null){
+            sb.append("[" + current.key + "," + current.count + "]");
+            current = current.next;
+        }
+    	return sb.toString();
 	}
     
     

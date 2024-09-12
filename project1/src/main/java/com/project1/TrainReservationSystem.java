@@ -38,8 +38,20 @@ public class TrainReservationSystem {
 
         Reservation newReservation = new Reservation(passengerName, seatNumber, date);
         reservations.add(newReservation);
+        updateCache(newReservation);
         return true;
     }
+
+    private void updateCache(Reservation newReservation) {
+        for (SearchKey key : searchCache.cache.keySet()) {
+            if (newReservation.date.isAfter(key.dateRange.getStartDate()) && newReservation.date.isBefore(key.dateRange.getEndDate())) {
+                List<Reservation> copy = new ArrayList<>(searchCache.cache.get(key));
+                copy.add(newReservation);
+                searchCache.put(key, copy);
+            }
+        }
+    }
+
 
     /**
      * @param trainId to search on for reserved seats
@@ -156,6 +168,9 @@ public class TrainReservationSystem {
 
             if (freqToKeys.get(freq).isEmpty()) {
                 freqToKeys.remove(freq);
+                if (freq == minFreq) {
+                    minFreq += 1;
+                }
             }
 
             return cache.get(key);
@@ -180,6 +195,14 @@ public class TrainReservationSystem {
                 //update frequency since key was accessed
                 int freq = keyToFreq.get(key);
                 keyToFreq.put(key, freq + 1);
+                freqToKeys.get(freq).remove(key);
+                freqToKeys.computeIfAbsent(freq + 1, k -> new LinkedHashSet<>()).add(key);
+                if (freqToKeys.get(freq).isEmpty()) {
+                    freqToKeys.remove(freq);
+                    if (freq == minFreq) {
+                        minFreq += 1;
+                    }
+                }
                 return;
             }
 
