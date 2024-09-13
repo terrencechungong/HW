@@ -16,11 +16,13 @@ public class MinHeap {
     public void insert(int value) {
         heap.add(value);
         int index = heap.size() - 1;
-        while (index >= 0) {
+        while (index > 0) {
             int parent = Math.floorDiv((index - 1), 2);
             if (heap.get(parent) > heap.get(index)) {
                 swap(index, parent);
                 index = parent;
+            } else {
+                break;
             }
         }
         return;
@@ -78,14 +80,14 @@ public class MinHeap {
             return;
         }
         int minElem = index;
-        if (heap.size() > 2 * index && heap.get(2 * index) != null) {
-            if (heap.get(minElem) > heap.get(2 * index)) {
-                minElem = 2 * index;
+        if (heap.size() > 2 * index + 1 && heap.get(2 * index+ 1) != null) {
+            if (heap.get(minElem) > heap.get(2 * index + 1)) {
+                minElem = 2 * index + 1;
             }
         }
-        if (heap.size() > 2 * index + 1 && heap.get(2 * index + 1) != null) {
-             if (heap.get(minElem) > heap.get(2 * index + 1)) {
-                 minElem = 2 * index + 1;
+        if (heap.size() > 2 * index + 2 && heap.get(2 * index + 2) != null) {
+             if (heap.get(minElem) > heap.get(2 * index + 2)) {
+                 minElem = 2 * index + 2;
             }
         }
         if (minElem != index) {

@@ -10,10 +10,10 @@ import java.util.Stack;
  */
 public class Tree
 {
-    static class TreeNode {
-        int value;
-        TreeNode left;
-        TreeNode right;
+     static class TreeNode {
+         int value;
+         TreeNode left;
+         TreeNode right;
 
         TreeNode(int value) {
             this.value = value;
