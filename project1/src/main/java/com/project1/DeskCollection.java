@@ -35,13 +35,10 @@ public class DeskCollection {
      * @return true if the desks overlap, false if not
      */
     public static boolean doOverlap(Point l1, Point r1, Point l2, Point r2) {
-        // 19 cases
-        Point l3 = new Point(l1.x, l1.y); // bottom left of desk one
-        Point r3 = new Point(r1.x, r1.y);  // top right of desk one
-        Point l4 = new Point(l2.x, l2.y); // bottom left of desk two
-        Point r4 = new Point(r2.x, r2.y); // top right of desk two
-
-        return true;
+        if (l1.x >= r2.x || l2.x >= r1.x) {
+            return false;
+        }
+        return !(l1.y <= r2.y || l2.y <= r1.y);
     }
 
     public static boolean doOverlap(Desk d1, Desk d2) {

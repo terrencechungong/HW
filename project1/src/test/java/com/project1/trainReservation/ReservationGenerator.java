@@ -10,7 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ReservationGenerator extends Generator<List<ReservationGenerator.Reservation>> {
+public class ReservationGenerator extends Generator<ReservationGenerator.Reservations> {
+
+    public class Reservations {
+        public  List<ReservationGenerator.Reservation> reservations;
+
+        public Reservations(List<ReservationGenerator.Reservation> reservations) {
+            this.reservations = reservations;
+        }
+    }
 
 
     public static class Reservation {
@@ -33,12 +41,12 @@ public class ReservationGenerator extends Generator<List<ReservationGenerator.Re
                     '}';
         }
     }
-        public ReservationGenerator(Class<List<ReservationGenerator.Reservation>> type) {
+        public ReservationGenerator(Class<ReservationGenerator.Reservations> type) {
             super(type);
         }
 
         @Override
-        public List<ReservationGenerator.Reservation> generate(SourceOfRandomness random, GenerationStatus status) {
+        public ReservationGenerator.Reservations generate(SourceOfRandomness random, GenerationStatus status) {
 
             List<ReservationGenerator.Reservation> resis = new ArrayList<>();
             for (int i = 0; i < 200; i++) {
@@ -47,7 +55,7 @@ public class ReservationGenerator extends Generator<List<ReservationGenerator.Re
                 LocalDate reservationDate = LocalDate.now().plusDays(random.nextInt(1, 19));  // Reservations within a year
                 resis.add(new ReservationGenerator.Reservation(passengerName, seatNumber, reservationDate));
             }
-            return resis;
+            return new Reservations(resis);
         }
     }
 

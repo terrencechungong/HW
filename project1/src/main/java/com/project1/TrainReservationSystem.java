@@ -38,6 +38,7 @@ public class TrainReservationSystem {
 
         Reservation newReservation = new Reservation(passengerName, seatNumber, date);
         reservations.add(newReservation);
+        trainReservations.put(trainId, reservations);
         updateCache(newReservation);
         return true;
     }
@@ -100,6 +101,20 @@ public class TrainReservationSystem {
                     ", seatNumber=" + seatNumber +
                     ", date=" + date +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Reservation that = (Reservation) o;
+            return seatNumber == that.seatNumber &&
+                    passengerName.equals(that.passengerName) &&
+                    date.equals(that.date);
+        }
+        @Override
+        public int hashCode() {
+            return Objects.hash(passengerName, seatNumber, date);
         }
     }
 
@@ -224,6 +239,26 @@ public class TrainReservationSystem {
             minFreq = 1;
             //if the set corresponding to frequency 1 doesn't exist, create it then add the key
             freqToKeys.computeIfAbsent(1, k -> new LinkedHashSet<>()).add(key);
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public int getMinFreq() {
+            return minFreq;
+        }
+
+        public Map<K, V> getCache() {
+            return cache;
+        }
+
+        public Map<K, Integer> getKeyToFreq() {
+            return keyToFreq;
+        }
+
+        public Map<Integer, LinkedHashSet<K>> getFreqToKeys() {
+            return freqToKeys;
         }
     }
 }

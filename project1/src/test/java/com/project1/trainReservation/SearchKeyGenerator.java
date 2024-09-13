@@ -4,13 +4,22 @@ import com.pholser.junit.quickcheck.generator.GenerationStatus;
 import com.pholser.junit.quickcheck.generator.Generator;
 import com.pholser.junit.quickcheck.random.SourceOfRandomness;
 import com.project1.DateRange;
-import com.project1.TrainReservationSystem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Random;
 
-public class SearchKeyGenerator extends Generator<List<SearchKeyGenerator.SearchKey>> {
+public class SearchKeyGenerator extends Generator<SearchKeyGenerator.SearchKeys> {
+
+
+    public class SearchKeys {
+        public  List<SearchKeyGenerator.SearchKey> searchKeys;
+
+        public SearchKeys(List<SearchKey> keys) {
+            this.searchKeys = keys;
+        }
+    }
+
 
     public class SearchKey {
         public final String trainId;
@@ -22,18 +31,19 @@ public class SearchKeyGenerator extends Generator<List<SearchKeyGenerator.Search
         }
     }
 
-    public SearchKeyGenerator(Class<List<SearchKeyGenerator.SearchKey>> type) {
+    public SearchKeyGenerator(Class<SearchKeyGenerator.SearchKeys> type) {
         super(type);
     }
 
     @Override
-    public List<SearchKey> generate(SourceOfRandomness random, GenerationStatus status) {
+    public SearchKeys generate(SourceOfRandomness random, GenerationStatus status) {
         List<SearchKey> keys = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            String trainId = "Train" + random.nextInt(1, 3);  // Random train ID
+        Random rand = new Random();
+        for (int i = 0; i < 200; i++) {
+            String trainId = "Train" +  rand.nextInt(3) + 1;
             DateRange dateRange = new DateRangeGenerator().generate(random, status);  // Random date range
             keys.add(new SearchKey(trainId, dateRange));
         }
-        return keys;
+        return new SearchKeys(keys);
     }
 }
